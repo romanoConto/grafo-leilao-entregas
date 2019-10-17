@@ -2,85 +2,117 @@ package com.gerenciador;
 
 import com.entradas.Entradas;
 import com.entradas.PontoEntrada;
-
+import com.entradas.PontoEntrega;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Gerenciador {
+public class Gerenciador
+{
+	private static Entradas entradas = new Entradas();
 
-    private static Entradas entradas = new Entradas();
+	public void addNo() throws Exception
+	{
 
-    public void addNo() throws Exception {
+		String path = "src\\files\\entradas.txt";
 
-        String path = "src\\files\\entradas.txt";
+		FileReader arquivo = new FileReader(path);
+		BufferedReader lerArq = new BufferedReader(arquivo);
+		String linha = null;
 
-        FileReader arquivo = new FileReader(path);
-        BufferedReader lerArq = new BufferedReader(arquivo);
-        String linha = null;
+		List<PontoEntrada> pontoEntradas = new ArrayList<>();
 
-        List<PontoEntrada> pontoEntradas = new ArrayList<>();
+		int linhaMatriz = 0;
 
-        int i = 0;
-        while ((linha = lerArq.readLine()) != null) {
+		while ((linha = lerArq.readLine()) != null)
+		{
 
-            boolean valores = false;
-            List<String> partes = Arrays.asList(linha.split(","));
+			int colunaMatriz = 0;
 
-            if (partes.size() == 1 && entradas.getTamanhoMatrizEntrada() == 0) {
-                entradas.setTamanhoMatrizEntrada(Integer.parseInt(partes.get(0)));
-                continue;
-            }
+			List<String> colunas = Arrays.asList(linha.split(","));
 
-            if (partes.size() == 1 && entradas.getTamanhoMatrizEntrega() == 0) {
-                entradas.setTamanhoMatrizEntrega(Integer.parseInt(partes.get(0)));
-                continue;
-            }
+			//Verifica se é o tamanho da matriz distancia
+			if (colunas.size() == 1 && entradas.getTamanhoMatrizEntrada() == 0)
+			{
+				entradas.setTamanhoMatrizEntrada(Integer.parseInt(colunas.get(0)));
+				continue;
+			}
 
-            int j = 0;
+			//Verifica se é o tamanho da matriz de entregas
+			if (colunas.size() == 1 && entradas.getTamanhoMatrizEntrega() == 0)
+			{
+				entradas.setTamanhoMatrizEntrega(Integer.parseInt(colunas.get(0)));
+				continue;
+			}
 
-            for (String s : partes) {
+			for (String col : colunas)
+			{
 
-                if (s.contains("'")) {
+				//Verifica se é o cabeçalho da matriz com o nome dos pontos
+				if (col.contains("'"))
+				{
 
-                    PontoEntrada ponto = new PontoEntrada();
-                    ponto.setNome(s.replaceAll("'", ""));
+					PontoEntrada ponto = new PontoEntrada();
+					ponto.setNome(col.replaceAll("'", ""));
 
-                    pontoEntradas.add(ponto);
-                    continue;
-                }
+					pontoEntradas.add(ponto);
+					continue;
+				}
 
-                if (!isRoute(partes)) {
-                    PontoEntrada ponto = pontoEntradas.get(j);
+				//Verifica se é uma linha da matriz distancia
+				if (!isRoute(colunas))
+                {
+					PontoEntrada ponto = pontoEntradas.get(colunaMatriz);
+					List<Integer> distancias = ponto.getDistancias();
 
-                    ponto.setDistancias();
-                    continue;
-                }
+					distancias.add(Integer.valueOf(col));
 
-                if (isRoute(partes)) {
-                    continue;
-                }
-            }
+					ponto.setDistancias(distancias);
 
-            if (!isRoute(partes)) {
-                i++;
-            }
-        }
-    }
+					colunaMatriz++;
+					continue;
+				}
 
-    private static boolean isRoute(List<String> partes) {
-        for (String parte : partes) {
-            char[] ps = parte.toCharArray();
-            for (int i = 0; i < ps.length; i++) {
-                if (Character.isAlphabetic(ps[i]))
-                    return true;
-            }
-        }
-        return false;
-    }
+				//Verifica se é uma linha da matriz entregas
+				if (isRoute(colunas))
+				{
+                    PontoEntrega caminho = new PontoEntrega();
+
+                    if(colunaMatriz == 0)
+                    {
+                        caminho.setPartida(Integer.parseInt(col));
+                    }
+                    if(colunaMatriz == 1)
+                    {
+                        caminho.setDestino(col);
+                    }
+                    if(colunaMatriz == 2)
+                    {
+                        caminho.setBonus(Integer.parseInt(col));
+                    }
+                    colunaMatriz++;
+				}
+			}
+		}
+	}
+
+	private static boolean isRoute(List<String> partes)
+	{
+		for (String parte : partes)
+		{
+			char[] ps = parte.toCharArray();
+			for (int i = 0; i < ps.length; i++)
+			{
+				if (Character.isAlphabetic(ps[i]))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
 
 
