@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Scanner ler = new Scanner(System.in);
         Gerenciador gerenciador = new Gerenciador();
         int iniciar;
@@ -16,6 +16,12 @@ public class Main {
             System.out.println("2 - Entregas ");
             System.out.println("0 - Sair ");
             iniciar = ler.nextInt();
+
+            if(iniciar == 1)
+            {
+                gerenciador.addNo();
+            }
+
         }
     }
 }
