@@ -1,0 +1,39 @@
+# Default ignored files
+/workspace.xml
+# Project exclude paths
+/.
+# Project exclude paths
+/.# Maven
+  target/
+
+  # Gradle
+  .gradle/
+
+  # IntelliJ
+  overlays/
+  .idea/
+  *.iml
+
+  # Eclipse
+  .project
+  .classpath
+  .metadata/
+  .settings/
+  .externalToolBuilders
+
+  # External tool builders
+  .externalToolBuilders/
+
+  ### Java ###
+  # Compiled class file
+  *.class
+
+  # vs code
+  .vscode/
+
+  # NodeJS & Outros
+  src/main/generated-sources/
+  src/main/webapp/appfusion/app/
+  src/main/webapp/appfusion/index.html
+  src/main/frontend/node/
+  src/main/frontend/node_modules/
