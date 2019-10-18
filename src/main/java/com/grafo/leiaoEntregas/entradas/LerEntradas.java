@@ -1,8 +1,9 @@
-package com.gerenciador;
+package com.grafo.leiaoEntregas.entradas;
 
-import com.entradas.Entradas;
-import com.entradas.PontoEntrada;
-import com.entradas.PontoEntrega;
+import com.grafo.leiaoEntregas.Distancia;
+import com.grafo.leiaoEntregas.Entradas;
+import com.grafo.leiaoEntregas.PontoEntrada;
+import com.grafo.leiaoEntregas.PontoEntrega;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,12 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Gerenciador {
+public class LerEntradas {
     private static Entradas entradas = new Entradas();
 
-    public void addNo() throws Exception {
-
-        String path = "src\\files\\entradas.txt";
+    public Entradas readFile(String path) throws Exception {
 
         FileReader arquivo = new FileReader(path);
         BufferedReader lerArq = new BufferedReader(arquivo);
@@ -25,6 +24,7 @@ public class Gerenciador {
         List<PontoEntrega> pontosEntregas = new ArrayList<>();
 
         int linhaMatriz = 0;
+        boolean matriz = false;
 
         while ((linha = lerArq.readLine()) != null) {
 
@@ -69,22 +69,32 @@ public class Gerenciador {
                 //Verifica se é uma linha da matriz distancia
                 if (!isRoute(colunas)) {
                     PontoEntrada ponto = pontoEntradas.get(colunaMatriz);
-                    List<Integer> distancias = ponto.getDistancias();
+                    List<Distancia> distancias = ponto.getDistancias();
 
-                    distancias.add(Integer.valueOf(col));
+                    Distancia dist = new Distancia();
+                    dist.setNome(pontoEntradas.get(linhaMatriz).getNome());
+                    dist.setDistancia(Integer.valueOf(col));
+
+                    distancias.add(dist);
 
                     ponto.setDistancias(distancias);
 
+                    matriz = true;
                     colunaMatriz++;
                     continue;
                 }
 
                 //Verifica se é uma linha da matriz entregas
             }
+
+            if (matriz) {
+                linhaMatriz++;
+            }
         }
         entradas.setPontosEntrada(pontoEntradas);
         entradas.setPontosEntrega(pontosEntregas);
-        int i = 0;
+
+        return entradas;
     }
 
     private static boolean isRoute(List<String> partes) {
@@ -99,5 +109,3 @@ public class Gerenciador {
         return false;
     }
 }
-
-

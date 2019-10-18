@@ -1,4 +1,4 @@
-package com.entradas;
+package com.grafo.leiaoEntregas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 public class PontoEntrada {
 
     private String nome;
-    private List<Integer> distancias = new ArrayList<>();
+    private List<Distancia> distancias = new ArrayList<>();
 
     public String getNome() {
         return nome;
@@ -16,11 +16,11 @@ public class PontoEntrada {
         this.nome = nome;
     }
 
-    public List<Integer> getDistancias() {
+    public List<Distancia> getDistancias() {
         return distancias;
     }
 
-    public void setDistancias(List<Integer> distancias) {
+    public void setDistancias(List<Distancia> distancias) {
         this.distancias = distancias;
     }
 }

@@ -1,4 +1,4 @@
-package com.entradas;
+package com.grafo.leiaoEntregas;
 
 public class PontoEntrega
 {
