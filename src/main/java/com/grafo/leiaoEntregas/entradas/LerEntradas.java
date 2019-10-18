@@ -2,7 +2,7 @@ package com.grafo.leiaoEntregas.entradas;
 
 import com.grafo.leiaoEntregas.Distancia;
 import com.grafo.leiaoEntregas.Entradas;
-import com.grafo.leiaoEntregas.PontoEntrada;
+import com.grafo.leiaoEntregas.PontoGrafo;
 import com.grafo.leiaoEntregas.PontoEntrega;
 
 import java.io.BufferedReader;
@@ -20,7 +20,7 @@ public class LerEntradas {
         BufferedReader lerArq = new BufferedReader(arquivo);
         String linha = null;
 
-        List<PontoEntrada> pontoEntradas = new ArrayList<>();
+        List<PontoGrafo> pontoGrafos = new ArrayList<>();
         List<PontoEntrega> pontosEntregas = new ArrayList<>();
 
         int linhaMatriz = 0;
@@ -59,20 +59,20 @@ public class LerEntradas {
                 //Verifica se é o cabeçalho da matriz com o nome dos pontos
                 if (col.contains("'")) {
 
-                    PontoEntrada ponto = new PontoEntrada();
+                    PontoGrafo ponto = new PontoGrafo();
                     ponto.setNome(col.replaceAll("'", ""));
 
-                    pontoEntradas.add(ponto);
+                    pontoGrafos.add(ponto);
                     continue;
                 }
 
                 //Verifica se é uma linha da matriz distancia
                 if (!isRoute(colunas)) {
-                    PontoEntrada ponto = pontoEntradas.get(colunaMatriz);
+                    PontoGrafo ponto = pontoGrafos.get(colunaMatriz);
                     List<Distancia> distancias = ponto.getDistancias();
 
                     Distancia dist = new Distancia();
-                    dist.setNome(pontoEntradas.get(linhaMatriz).getNome());
+                    dist.setNome(pontoGrafos.get(linhaMatriz).getNome());
                     dist.setDistancia(Integer.valueOf(col));
 
                     distancias.add(dist);
@@ -91,7 +91,7 @@ public class LerEntradas {
                 linhaMatriz++;
             }
         }
-        entradas.setPontosEntrada(pontoEntradas);
+        entradas.setPontosEntrada(pontoGrafos);
         entradas.setPontosEntrega(pontosEntregas);
 
         return entradas;

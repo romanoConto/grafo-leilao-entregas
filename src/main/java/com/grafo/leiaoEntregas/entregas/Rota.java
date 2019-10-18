@@ -4,16 +4,27 @@ import java.util.List;
 
 public class Rota {
 
-    private int horario;
+    private int distancia;
     private int recompensa;
+    private String destino;
     private List<String> pontos;
 
-    public int getHorario() {
-        return horario;
+    public String getDestino()
+    {
+        return destino;
     }
 
-    public void setHorario(int horario) {
-        this.horario = horario;
+    public void setDestino(String destino)
+    {
+        this.destino = destino;
+    }
+
+    public int getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(int distancia) {
+        this.distancia = distancia;
     }
 
     public int getRecompensa() {

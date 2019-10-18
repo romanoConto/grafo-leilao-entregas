@@ -3,7 +3,8 @@ package com.grafo.leiaoEntregas;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PontoEntrada {
+public class PontoGrafo
+{
 
     private String nome;
     private List<Distancia> distancias = new ArrayList<>();

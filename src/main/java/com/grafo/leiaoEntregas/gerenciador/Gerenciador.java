@@ -1,15 +1,8 @@
 package com.grafo.leiaoEntregas.gerenciador;
 
 import com.grafo.leiaoEntregas.Entradas;
-import com.grafo.leiaoEntregas.PontoEntrada;
-import com.grafo.leiaoEntregas.PontoEntrega;
 import com.grafo.leiaoEntregas.entradas.LerEntradas;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class Gerenciador {
