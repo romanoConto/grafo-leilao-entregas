@@ -10,21 +10,15 @@ import java.util.List;
 
 public class Entregas
 {
-
 	private Entradas entradas;
-	private Rota rota;
-
-	public Rota getRota()
-	{
-		return rota;
-	}
+	private List<Rota> rotas = new ArrayList<>();
 
 	public Entregas(Entradas entradas)
 	{
 		this.entradas = entradas;
 	}
 
-	public void processarEntregas()
+	public List<Rota> processarEntregas()
 	{
 		List<PontoEntrega> pontoEntregas = entradas.getPontosEntrega();
 
@@ -32,20 +26,23 @@ public class Entregas
 
 		for (PontoEntrega pontoEntrega : pontoEntregas)
 		{
+			Rota rota = new Rota();
+			rota.setDistancia(0);
+			rota.setPontos(new ArrayList<>());
+			rota.setRecompensa(0);
+			rota.setDestino(pontoEntrega.getDestino());
 
-			while (true)
-			{
-				String ponto = pontoEntrega.getDestino();
+			rota = distanciaRota(pontoAtual, rota);
 
-				boolean exist = pontoAtual.getDistancias().stream().map(Distancia::getNome)
-					.anyMatch(ponto::equals);
-			}
+			rotas.add(rota);
+			pontoAtual = getPonto(pontoEntrega.getDestino());
 		}
+
+		return rotas;
 	}
 
 	private Rota distanciaRota(PontoGrafo pontoAtual, Rota rota)
 	{
-
 		for (Distancia dist : pontoAtual.getDistancias())
 		{
 			if (dist.getNome().equals(rota.getDestino()) && dist.getDistancia() != 0)
@@ -66,8 +63,9 @@ public class Entregas
 				rota.setPontos(pontos);
 
 				rota.setDistancia(rota.getDistancia() + dist.getDistancia());
+				PontoGrafo ponto = getPonto(dist.getNome());
 
-				return distanciaRota(getPonto(dist.getNome()), rota);
+				return distanciaRota(ponto, rota);
 			}
 		}
 
