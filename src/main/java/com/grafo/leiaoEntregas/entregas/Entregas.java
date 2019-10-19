@@ -33,7 +33,9 @@ public class Entregas {
             rota = distanciaRota(pontoAtual, rota);
 
             if (rota != null)
-                rotas.add(rota);
+			{
+				rotas.add(rota);
+			}
             pontoAtual = getPonto(pontoEntrega.getDestino());
         }
 
@@ -49,7 +51,7 @@ public class Entregas {
 
                 rota.setDistancia(rota.getDistancia() + dist.getDistancia());
 
-                rota.setRecompensa(getBonus(dist.getNome()));
+                rota.setRecompensa(getBonus(dist.getNome(), rota.getDestino(), rota));
                 return rota;
             }
             if (dist.getDistancia() != 0 && (rota.getPontos().size() < 1
@@ -78,8 +80,16 @@ public class Entregas {
         return null;
     }
 
-    private int getBonus(String name) {
-        return getEntrega(name).getBonus();
+    private int getBonus(String pontodist, String pontoRota, Rota rota) {
+    	if(rota.getPontos().size() > 2)
+		{
+			return getEntrega(pontodist).getBonus() + getEntrega(pontoRota).getBonus();
+		}
+    	else
+		{
+			return getEntrega(pontodist).getBonus();
+		}
+
     }
 
     private PontoEntrega getEntrega(String name) {

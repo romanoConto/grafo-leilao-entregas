@@ -24,7 +24,7 @@ public class Gerenciador {
         while (true) {
             System.out.println("\n============== LEILÃO DE ENTREGAS =============");
             System.out.println("1 - Carregar Entradas ");
-            System.out.println("2 - Entregas ");
+            System.out.println("2 - Calcular Entregas ");
             System.out.println("3 - Mostrar Rotas ");
             System.out.println("0 - Sair ");
             iniciar = ler.nextInt();
@@ -46,17 +46,23 @@ public class Gerenciador {
     }
 
     private void showRoute() {
-        System.out.print("Partida: A; ");
+        int cont = 1;
         for (Rota r : rotas) {
-            System.out.println();
-            System.out.print("Destino: " + r.getDestino());
-            System.out.print(" Caminho:");
-
+            System.out.print("\nA " + cont + "º rota a ser realizada é: ");
             StringBuilder s = new StringBuilder();
             for (String d : r.getPontos()) {
                 s.append(d + "->");
             }
-            System.out.print(s.replace(s.length() - 2, s.length(), ";"));
+
+            boolean isTrue = false;
+            if (r.getRecompensa() == 1) {
+                isTrue = true;
+            }
+
+            System.out.println(s.replace(s.length() - 2, s.length(), "."));
+            System.out.println("Com a chegada estimada de " + r.getDistancia() + " unidades de tempo no destino " + "'" + r.getDestino() + "'"
+                    + " e o valor para esta entrega será de " + (isTrue ? r.getRecompensa() + " real" : r.getRecompensa() + " reais") + ".");
+            cont++;
         }
     }
 
@@ -72,7 +78,6 @@ public class Gerenciador {
 
     private static void calcRoute() {
         Entregas matriz = new Entregas(entradas);
-
         rotas = matriz.processarEntregas();
     }
 
