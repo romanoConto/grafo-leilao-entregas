@@ -8,96 +8,86 @@ import com.grafo.leiaoEntregas.PontoEntrega;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entregas
-{
-	private Entradas entradas;
-	private List<Rota> rotas = new ArrayList<>();
+public class Entregas {
+    private Entradas entradas;
+    private List<Rota> rotas = new ArrayList<>();
 
-	public Entregas(Entradas entradas)
-	{
-		this.entradas = entradas;
-	}
+    public Entregas(Entradas entradas) {
+        this.entradas = entradas;
+    }
 
-	public List<Rota> processarEntregas()
-	{
-		List<PontoEntrega> pontoEntregas = entradas.getPontosEntrega();
+    public List<Rota> processarEntregas() {
+        List<PontoEntrega> pontoEntregas = entradas.getPontosEntrega();
 
-		PontoGrafo pontoAtual = entradas.getPontosGrafo().get(0);
+        PontoGrafo pontoAtual = entradas.getPontosGrafo().get(0);
 
-		for (PontoEntrega pontoEntrega : pontoEntregas)
-		{
-			Rota rota = new Rota();
-			rota.setDistancia(0);
-			rota.setPontos(new ArrayList<>());
-			rota.setRecompensa(0);
-			rota.setDestino(pontoEntrega.getDestino());
+        for (PontoEntrega pontoEntrega : pontoEntregas) {
+            Rota rota = new Rota();
+            rota.setDistancia(0);
+            rota.setRecompensa(0);
+            rota.setDestino(pontoEntrega.getDestino());
+            List<String> pontos = rota.getPontos();
+            pontos.add(pontoAtual.getNome());
+            rota.setPontos(pontos);
 
-			rota = distanciaRota(pontoAtual, rota);
+            rota = distanciaRota(pontoAtual, rota);
 
-			rotas.add(rota);
-			pontoAtual = getPonto(pontoEntrega.getDestino());
-		}
+            if (rota != null)
+                rotas.add(rota);
+            pontoAtual = getPonto(pontoEntrega.getDestino());
+        }
 
-		return rotas;
-	}
+        return rotas;
+    }
 
-	private Rota distanciaRota(PontoGrafo pontoAtual, Rota rota)
-	{
-		for (Distancia dist : pontoAtual.getDistancias())
-		{
-			if (dist.getNome().equals(rota.getDestino()) && dist.getDistancia() != 0)
-			{
-				List<String> pontos = rota.getPontos();
-				pontos.add(dist.getNome());
-				rota.setPontos(pontos);
+    private Rota distanciaRota(PontoGrafo pontoAtual, Rota rota) {
+        for (Distancia dist : pontoAtual.getDistancias()) {
+            if (dist.getNome().equals(rota.getDestino()) && dist.getDistancia() != 0) {
+                List<String> pontos = rota.getPontos();
+                pontos.add(dist.getNome());
+                rota.setPontos(pontos);
 
-				rota.setDistancia(rota.getDistancia() + dist.getDistancia());
+                rota.setDistancia(rota.getDistancia() + dist.getDistancia());
 
-				rota.setRecompensa(getBonus(dist.getNome()));
-				return rota;
-			}
-			if (dist.getDistancia() != 0)
-			{
-				List<String> pontos = rota.getPontos();
-				pontos.add(dist.getNome());
-				rota.setPontos(pontos);
+                rota.setRecompensa(getBonus(dist.getNome()));
+                return rota;
+            }
+            if (dist.getDistancia() != 0 && (rota.getPontos().size() < 1
+                    || !rota.getPontos().contains(dist.getNome()))) {
 
-				rota.setDistancia(rota.getDistancia() + dist.getDistancia());
-				PontoGrafo ponto = getPonto(dist.getNome());
+                List<String> pontos = rota.getPontos();
+                pontos.add(dist.getNome());
+                rota.setPontos(pontos);
 
-				return distanciaRota(ponto, rota);
-			}
-		}
+                rota.setDistancia(rota.getDistancia() + dist.getDistancia());
+                PontoGrafo ponto = getPonto(dist.getNome());
 
-		return null;
-	}
+                return distanciaRota(ponto, rota);
+            }
+        }
 
-	private PontoGrafo getPonto(String name)
-	{
-		for (PontoGrafo p : entradas.getPontosGrafo())
-		{
-			if (p.getNome().equals(name))
-			{
-				return p;
-			}
-		}
-		return null;
-	}
+        return null;
+    }
 
-	private int getBonus(String name)
-	{
-		return getEntrega(name).getBonus();
-	}
+    private PontoGrafo getPonto(String name) {
+        for (PontoGrafo p : entradas.getPontosGrafo()) {
+            if (p.getNome().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
 
-	private PontoEntrega getEntrega(String name)
-	{
-		for (PontoEntrega p : entradas.getPontosEntrega())
-		{
-			if (p.getDestino().equals(name))
-			{
-				return p;
-			}
-		}
-		return null;
-	}
+    private int getBonus(String name) {
+        return getEntrega(name).getBonus();
+    }
+
+    private PontoEntrega getEntrega(String name) {
+        for (PontoEntrega p : entradas.getPontosEntrega()) {
+            if (p.getDestino().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
 }

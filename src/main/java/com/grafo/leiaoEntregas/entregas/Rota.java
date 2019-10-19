@@ -1,5 +1,6 @@
 package com.grafo.leiaoEntregas.entregas;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Rota {
@@ -7,7 +8,7 @@ public class Rota {
     private int distancia;
     private int recompensa;
     private String destino;
-    private List<String> pontos;
+    private List<String> pontos = new ArrayList<>();
 
     public String getDestino()
     {

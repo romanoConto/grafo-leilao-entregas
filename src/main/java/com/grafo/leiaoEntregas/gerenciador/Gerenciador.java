@@ -46,7 +46,18 @@ public class Gerenciador {
     }
 
     private void showRoute() {
-    	System.out.println(rotas);
+        System.out.print("Partida: A; ");
+        for (Rota r : rotas) {
+            System.out.println();
+            System.out.print("Destino: " + r.getDestino());
+            System.out.print(" Caminho:");
+
+            StringBuilder s = new StringBuilder();
+            for (String d : r.getPontos()) {
+                s.append(d + "->");
+            }
+            System.out.print(s.replace(s.length() - 2, s.length(), ";"));
+        }
     }
 
     private static void ReadFile() {
