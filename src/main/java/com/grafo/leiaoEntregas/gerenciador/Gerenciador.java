@@ -49,6 +49,8 @@ public class Gerenciador {
 
     private void showRoute() {
         int cont = 1;
+        int recompensa = 0;
+        System.out.println("\n=================== #Entregas do dia# ===================");
         for (Rota r : rotas) {
             System.out.print("\nA " + cont + "º rota a ser realizada é: ");
             StringBuilder s = new StringBuilder();
@@ -64,8 +66,10 @@ public class Gerenciador {
             System.out.println(s.replace(s.length() - 2, s.length(), "."));
             System.out.println("Com a chegada estimada de " + r.getDistancia() + " unidades de tempo no destino " + "'" + r.getDestino() + "'"
                     + " e o valor para esta entrega será de " + (isTrue ? r.getRecompensa() + " real" : r.getRecompensa() + " reais") + ".");
+            recompensa += r.getRecompensa();
             cont++;
         }
+        System.out.println("\nO lucro total do dia: " + recompensa + ".");
     }
 
     private static void ReadFile() {
