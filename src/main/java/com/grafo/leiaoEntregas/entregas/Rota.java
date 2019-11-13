@@ -28,6 +28,10 @@ public class Rota {
         this.distancia = distancia;
     }
 
+    public void addDistancia(int distancia) {
+        this.distancia += distancia;
+    }
+
     public int getRecompensa() {
         return recompensa;
     }
@@ -43,4 +47,10 @@ public class Rota {
     public void setPontos(List<String> pontos) {
         this.pontos = pontos;
     }
+
+    public void addPonto(String ponto)
+    {
+        this.pontos.add(ponto);
+    }
+
 }
