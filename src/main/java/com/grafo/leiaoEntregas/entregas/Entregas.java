@@ -6,106 +6,102 @@ import com.grafo.leiaoEntregas.PontoGrafo;
 import com.grafo.leiaoEntregas.PontoEntrega;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class Entregas
-{
-	private Entradas entradas;
-	private List<Rota> rotas = new ArrayList<>();
+public class Entregas {
+    private Entradas entradas;
+    private List<Rota> rotas = new ArrayList<>();
+	private List<String> pontosPassados = new ArrayList<>();
 
-	public Entregas(Entradas entradas)
-	{
-		this.entradas = entradas;
-	}
+    public Entregas(Entradas entradas) {
+        this.entradas = entradas;
+    }
 
-	public List<Rota> processarEntregas()
-	{
-		List<PontoEntrega> pontoEntregas = entradas.getPontosEntrega();
+    public List<Rota> processarEntregas() {
+        List<PontoEntrega> pontoEntregas = entradas.getPontosEntrega();
 
-		PontoGrafo pontoAtual = entradas.getPontosGrafo().get(0);
+        PontoGrafo pontoAtual = entradas.getPontosGrafo().get(0);
 
-		for (PontoEntrega pontoEntrega : pontoEntregas)
-		{
-			Rota rota = new Rota();
-			rota.setDistancia(0);
-			rota.setRecompensa(0);
-			rota.setDestino(pontoEntrega.getDestino());
-			rota.addPonto(pontoAtual.getNome());
+        for (PontoEntrega pontoEntrega : pontoEntregas) {
+            Rota rota = new Rota();
+            rota.setDistancia(0);
+            rota.setRecompensa(0);
+            rota.setDestino(pontoEntrega.getDestino());
+            rota.addPonto(pontoAtual.getNome());
 
-			rota = distanciaRota(pontoAtual, rota);
+            rota = distanciaRota(pontoAtual, rota);
 
-			if (rota != null)
-			{
-				rotas.add(rota);
-			}
-			pontoAtual = getPonto(pontoEntrega.getDestino());
-		}
+            if (rota != null) {
+                rotas.add(rota);
+            }
+            pontoAtual = getPonto(pontoEntrega.getDestino());
+        }
 
-		return rotas;
-	}
+        return rotas;
+    }
 
-	private Rota distanciaRota(PontoGrafo pontoAtual, Rota rota)
-	{
-	    List<Rota> rotasPonto = new ArrayList<>();
+    private Rota distanciaRota(PontoGrafo pontoAtual, Rota rota) {
+        List<Rota> rotasPonto = new ArrayList<>();
 
-	    Rota rotaAux = rota;
-		for (Distancia dist : pontoAtual.getDistancias())
-		{
-			if (dist.getNome().equals(rotaAux.getDestino()) && dist.getDistancia() != 0)
-			{
-                rotaAux.addPonto(dist.getNome());
-                rotaAux.addDistancia(dist.getDistancia());
-                rotaAux.setRecompensa(getBonus(dist.getNome()));
-                rotasPonto.add(rotaAux);
-                rotaAux = rota;
+        for (Distancia dist : pontoAtual.getDistancias()) {
+            if (pontosPassados.stream().anyMatch(x -> x.equals(dist.getNome())))
                 continue;
-			}
 
-			//CONTINUAR DAQUI--->>>>>>>>>>>>>>>
-			if (dist.getDistancia() != 0 && (rota.getPontos().size() < 1 || !rota.getPontos()
-				.contains(dist.getNome())))
-			{
+            if (dist.getNome().equals(rota.getDestino()) && dist.getDistancia() != 0) {
+                Rota r = new Rota();
+                r.setDestino(rota.getDestino());
+                r.setPontos(new ArrayList<>(rota.getPontos()));
+                r.setRecompensa(rota.getRecompensa());
+                r.setDistancia(rota.getDistancia());
 
-				List<String> pontos = rota.getPontos();
-				pontos.add(dist.getNome());
-				rota.setPontos(pontos);
+                r.addPonto(dist.getNome());
+                r.addDistancia(dist.getDistancia());
+                r.setRecompensa(getBonus(dist.getNome()));
+                rotasPonto.add(r);
+                continue;
+            }
 
-				rota.setDistancia(rota.getDistancia() + dist.getDistancia());
-				PontoGrafo ponto = getPonto(dist.getNome());
+			pontosPassados.add(dist.getNome());
 
-				return distanciaRota(ponto, rota);
-			}
-		}
+            if (dist.getDistancia() != 0) {
+                rota.addPonto(dist.getNome());
+                rota.addDistancia(dist.getDistancia());
 
-		return null;
-	}
+                PontoGrafo ponto = getPonto(dist.getNome());
+                Rota r = distanciaRota(ponto, rota);
+                if (r != null) {
+                    rotasPonto.add(r);
+                }
+            }
+        }
 
-	private PontoGrafo getPonto(String name)
-	{
-		for (PontoGrafo p : entradas.getPontosGrafo())
-		{
-			if (p.getNome().equals(name))
-			{
-				return p;
-			}
-		}
-		return null;
-	}
+        rotasPonto.sort((x, y) -> Integer.compare(x.getDistancia(), y.getDistancia()));
+        Rota rotaMenor = rotasPonto.size() > 0 ? rotasPonto.get(0) : null;
 
-	private int getBonus(String pontodist)
-	{
-		return getEntrega(pontodist).getBonus();
-	}
+        return rotaMenor;
+    }
 
-	private PontoEntrega getEntrega(String name)
-	{
-		for (PontoEntrega p : entradas.getPontosEntrega())
-		{
-			if (p.getDestino().equals(name))
-			{
-				return p;
-			}
-		}
-		return null;
-	}
+    private PontoGrafo getPonto(String name) {
+        for (PontoGrafo p : entradas.getPontosGrafo()) {
+            if (p.getNome().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private int getBonus(String pontodist) {
+        return getEntrega(pontodist).getBonus();
+    }
+
+    private PontoEntrega getEntrega(String name) {
+        for (PontoEntrega p : entradas.getPontosEntrega()) {
+            if (p.getDestino().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
 }

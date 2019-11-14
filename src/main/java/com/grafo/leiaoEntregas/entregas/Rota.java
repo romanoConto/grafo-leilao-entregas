@@ -3,7 +3,7 @@ package com.grafo.leiaoEntregas.entregas;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rota {
+public class Rota implements Cloneable {
 
     private int distancia;
     private int recompensa;
@@ -53,4 +53,8 @@ public class Rota {
         this.pontos.add(ponto);
     }
 
+    @Override
+    public Rota clone() throws CloneNotSupportedException {
+        return (Rota) super.clone();
+    }
 }

@@ -82,7 +82,7 @@ public class Gerenciador {
         }
     }
 
-    private static void calcRoute() {
+    private static void calcRoute() throws CloneNotSupportedException {
         Entregas matriz = new Entregas(entradas);
         rotas = matriz.processarEntregas();
     }
