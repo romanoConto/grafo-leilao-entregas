@@ -14,7 +14,7 @@ public class Gerenciador {
     private static Entradas entradas = new Entradas();
     private static List<Rota> rotas = new ArrayList<>();
 
-    private static String path = "src\\files\\entradas.txt";
+    private static String path = null;
 
     public Gerenciador() throws Exception {
 
@@ -31,7 +31,38 @@ public class Gerenciador {
 
             switch (iniciar) {
                 case 1:
-                    ReadFile();
+                    System.out.println("\n============== ESCOLHA UMA OPÇÃO ==============");
+                    System.out.println("1 - Carregar Entradas Enunciado ");
+                    System.out.println("2 - Carregar Bug Parametro ");
+                    System.out.println("3 - Carregar Bug Aleatorio ");
+                    System.out.println("4 - Carregar Bug Complexa ");
+                    System.out.println("0 - Voltar ");
+                    iniciar = ler.nextInt();
+
+                    switch (iniciar) {
+                        case 1:
+                            path = "src\\files\\entradas.txt";
+                            ReadFile();
+                            break;
+
+                        case 2:
+                            path = "src\\files\\bug_parametro.txt";
+                            ReadFile();
+                            break;
+
+                        case 3:
+                            path = "src\\files\\bug_aleatorio.txt";
+                            ReadFile();
+                            break;
+
+                        case 4:
+                            path = "src\\files\\bug_complexa.txt";
+                            ReadFile();
+                            break;
+
+                        case 0:
+                            return;
+                    }
                     break;
                 case 2:
                     calcRoute();
