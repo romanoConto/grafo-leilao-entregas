@@ -36,6 +36,7 @@ public class Gerenciador {
                     System.out.println("2 - Carregar Bug Parametro ");
                     System.out.println("3 - Carregar Bug Aleatorio ");
                     System.out.println("4 - Carregar Bug Complexa ");
+                    System.out.println("5 - Carregar Entradas 2");
                     System.out.println("0 - Voltar ");
                     iniciar = ler.nextInt();
 
@@ -57,6 +58,11 @@ public class Gerenciador {
 
                         case 4:
                             path = "src\\files\\bug_complexa.txt";
+                            ReadFile();
+                            break;
+
+                        case 5:
+                            path = "src\\files\\entradas2.txt";
                             ReadFile();
                             break;
 

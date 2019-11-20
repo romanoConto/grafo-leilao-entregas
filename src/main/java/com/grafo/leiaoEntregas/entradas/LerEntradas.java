@@ -12,9 +12,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LerEntradas {
-    private static Entradas entradas = new Entradas();
+    private static Entradas entradas;
 
     public Entradas readFile(String path) throws Exception {
+
+        entradas = new Entradas();
 
         FileReader arquivo = new FileReader(path);
         BufferedReader lerArq = new BufferedReader(arquivo);
@@ -54,10 +56,13 @@ public class LerEntradas {
                 pontosEntregas.add(caminho);
                 continue;
             }
+
             for (String col : colunas) {
 
                 //Verifica se é o cabeçalho da matriz com o nome dos pontos
                 if (col.contains("'")) {
+                    if(colunas.size() != entradas.getTamanhoMatrizEntrada())
+                        throw new Exception();
 
                     PontoGrafo ponto = new PontoGrafo();
                     ponto.setNome(col.replaceAll("'", ""));
@@ -91,6 +96,9 @@ public class LerEntradas {
                 linhaMatriz++;
             }
         }
+//        if(entradas.getTamanhoMatrizEntrada() != entradas.getPontosGrafo().size())
+//            throw new Exception();
+
         entradas.setPontosEntrada(pontoGrafos);
         entradas.setPontosEntrega(pontosEntregas);
 
