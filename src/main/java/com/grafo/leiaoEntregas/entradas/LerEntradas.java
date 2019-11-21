@@ -96,8 +96,8 @@ public class LerEntradas {
                 linhaMatriz++;
             }
         }
-//        if(entradas.getTamanhoMatrizEntrada() != entradas.getPontosGrafo().size())
-//            throw new Exception();
+        if(entradas.getTamanhoMatrizEntrada() != linhaMatriz)
+            throw new Exception();
 
         entradas.setPontosEntrada(pontoGrafos);
         entradas.setPontosEntrega(pontosEntregas);

@@ -13,14 +13,14 @@ import java.util.List;
 public class Entregas
 {
 	private Entradas entradas;
-	private List<Rota> rotas = new ArrayList<>();
+	private List<RotasEntrega> rotas = new ArrayList<>();
 
 	public Entregas(Entradas entradas)
 	{
 		this.entradas = entradas;
 	}
 
-	public List<Rota> processarEntregas() throws CloneNotSupportedException
+	public List<RotasEntrega> processarEntregas() throws CloneNotSupportedException
 	{
 		List<PontoEntrega> pontoEntregas = entradas.getPontosEntrega();
 
@@ -34,11 +34,11 @@ public class Entregas
 			rota.setDestino(pontoEntrega.getDestino());
 			rota.addPonto(pontoAtual.getNome());
 
-			rota = distanciaRota(pontoAtual, rota, null);
+			RotasEntrega re = retornaRotas(pontoAtual, rota, null);
 
-			if (rota != null)
+			if (re != null)
 			{
-				rotas.add(rota);
+				rotas.add(re);
 			}
 			pontoAtual = getPonto("A");
 		}
@@ -46,14 +46,42 @@ public class Entregas
 		return rotas;
 	}
 
-	private Rota distanciaRota(PontoGrafo pontoAtual, Rota rota, List<String> pontosVerificados)
+	private RotasEntrega retornaRotas(PontoGrafo pontoAtual, Rota rota, List<String> pontosVerificados)
 		throws CloneNotSupportedException
 	{
-		Rota rotaAux = new Rota();
-		rotaAux.setDestino(new String(rota.getDestino()));
-		rotaAux.setPontos(new ArrayList<>(rota.getPontos()));
-		rotaAux.setRecompensa(rota.getRecompensa());
-		rotaAux.setDistancia(rota.getDistancia());
+		List<Rota> possiveisRotas = getPossiveisRotas(pontoAtual, rota, pontosVerificados);
+
+		possiveisRotas.sort((x, y) -> Integer.compare(x.getDistancia(), y.getDistancia()));
+		Rota rotaMenor = possiveisRotas.get(0);
+		possiveisRotas.remove(rotaMenor);
+
+		RotasEntrega re = new RotasEntrega();
+		re.setRotaMenor(rotaMenor);
+		re.setRotas(possiveisRotas);
+
+		return re;
+	}
+
+	private List<Rota> getPossiveisRotas(PontoGrafo pontoAtual, Rota rota,
+		List<String> pontosVerificados) throws CloneNotSupportedException
+	{
+		return getPossiveisRotas(pontoAtual, rota, pontosVerificados, null);
+	}
+
+	private List<Rota> getPossiveisRotas(PontoGrafo pontoAtual, Rota rotaAnt,
+		List<String> pontosVerificados, Distancia distAnt) throws CloneNotSupportedException
+	{
+		Rota rota = new Rota();
+		rota.setRecompensa(rotaAnt.getRecompensa());
+		rota.setPontos(new ArrayList<>(rotaAnt.getPontos()));
+		rota.setDistancia(rotaAnt.getDistancia());
+		rota.setDestino(rotaAnt.getDestino());
+
+		if (distAnt != null && !rota.getPontos().contains(distAnt.getNome()))
+		{
+			rota.addPonto(distAnt.getNome());
+			rota.addDistancia(distAnt.getDistancia());
+		}
 
 		List<Rota> rotasPonto = new ArrayList<>();
 
@@ -70,13 +98,13 @@ public class Entregas
 				continue;
 			}
 
-			if (dist.getNome().equals(rotaAux.getDestino()))
+			if (dist.getNome().equals(rota.getDestino()))
 			{
 				Rota r = new Rota();
-				r.setDestino(rotaAux.getDestino());
-				r.setPontos(new ArrayList<>(rotaAux.getPontos()));
-				r.setRecompensa(rotaAux.getRecompensa());
-				r.setDistancia(rotaAux.getDistancia());
+				r.setDestino(rota.getDestino());
+				r.setPontos(new ArrayList<>(rota.getPontos()));
+				r.setRecompensa(rota.getRecompensa());
+				r.setDistancia(rota.getDistancia());
 
 				r.addPonto(dist.getNome());
 				r.addDistancia(dist.getDistancia());
@@ -86,31 +114,18 @@ public class Entregas
 				continue;
 			}
 
-			rotaAux.addPonto(dist.getNome());
-			rotaAux.addDistancia(dist.getDistancia());
-
 			List<String> pontosVerfi = new ArrayList<>();
-			for (String p : rotaAux.getPontos())
+			for (String p : rota.getPontos())
 				pontosVerfi.add(p);
 
 			PontoGrafo ponto = getPonto(dist.getNome());
-			Rota r = distanciaRota(ponto, rotaAux, pontosVerfi);
+			List<Rota> r = getPossiveisRotas(ponto, rota, pontosVerfi, dist);
 			if (r != null)
 			{
-				rotasPonto.add(r);
+				rotasPonto.addAll(r);
 			}
-
-			rotaAux.setDestino(new String(rota.getDestino()));
-			rotaAux.setPontos(new ArrayList<>(rota.getPontos()));
-			rotaAux.setRecompensa(rota.getRecompensa());
-			rotaAux.setDistancia(rota.getDistancia());
-
 		}
-
-		rotasPonto.sort((x, y) -> Integer.compare(x.getDistancia(), y.getDistancia()));
-		Rota rotaMenor = rotasPonto.size() > 0 ? rotasPonto.get(0) : null;
-
-		return rotaMenor;
+		return rotasPonto;
 	}
 
 	private PontoGrafo getPonto(String name)
