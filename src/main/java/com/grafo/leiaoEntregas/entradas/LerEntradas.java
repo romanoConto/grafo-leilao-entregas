@@ -78,9 +78,21 @@ public class LerEntradas {
                     PontoGrafo ponto = pontoGrafos.get(colunaMatriz);
                     List<Distancia> distancias = ponto.getDistancias();
 
+                    Integer distancia = Integer.valueOf(col);
+
                     Distancia dist = new Distancia();
+                    try{
+                        if(linhaMatriz == colunaMatriz && distancia != 0)
+                        {
+                            continue;
+                        }
+                    } catch (Exception e)
+                    {
+                        System.out.println("A distancia do ponto " + ponto.getNome() + " é diferente de zero!");
+                    }
+
                     dist.setNome(pontoGrafos.get(linhaMatriz).getNome());
-                    dist.setDistancia(Integer.valueOf(col));
+                    dist.setDistancia(distancia);
 
                     distancias.add(dist);
 
