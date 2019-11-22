@@ -1,10 +1,8 @@
 package com.grafo.leiaoEntregas.entradas;
-
 import com.grafo.leiaoEntregas.Distancia;
 import com.grafo.leiaoEntregas.Entradas;
 import com.grafo.leiaoEntregas.PontoGrafo;
 import com.grafo.leiaoEntregas.PontoEntrega;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -13,6 +11,10 @@ import java.util.List;
 
 public class LerEntradas {
     private static Entradas entradas;
+
+    /**
+     * Faz a leitura do arquivo, quebrando em linhas e colunas
+     */
 
     public Entradas readFile(String path) throws Exception {
 
@@ -104,6 +106,11 @@ public class LerEntradas {
 
         return entradas;
     }
+
+    /**
+     * Verifica se parte analisada é um caracter alfabetico,
+     * caso seja, sinifica que é um ponto do grafo
+     */
 
     private static boolean isRoute(List<String> partes) {
         for (String parte : partes) {
